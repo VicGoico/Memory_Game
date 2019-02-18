@@ -42,9 +42,11 @@ MemoryGame = function(gs) {
 		// Aqui mezclo las cartas unas 50 veces
 		for(var i = 0; i < 50; i++){
 			// Me guardo 2 posiciones del array de cartas creadas aleatoriamente
-			// y le resto menos uno ya que se genera un numero entre 1 y 16
-			var primeraCarta = Math.ceil((Math.random()*16))--;
-			var segundaCarta = Math.ceil((Math.random()*16))--;
+			var primeraCarta = Math.ceil((Math.random()*16));
+			var segundaCarta = Math.ceil((Math.random()*16));
+			// Le resto menos uno ya que se genera un numero entre 1 y 16
+			primeraCarta--;
+			segundaCarta--;
 			// Guardo los datos de la posicion de la primeraCarta
 			var card = cartas[primeraCarta];
 			// Mezclo los datos de las 2 cartas
@@ -69,6 +71,11 @@ MemoryGame = function(gs) {
 		}
 
 	}
+
+	this.loop = function(){
+		// Llama a la funcion draw
+		draw();
+	}
 	this.onClick = function(cardId){
 		// Volteo la carta que me pasan por el cardId
 		cartas[cardId].flip();
@@ -91,7 +98,7 @@ MemoryGame = function(gs) {
 				}
 				// No son la misma, cambio su estado a "Espalda"
 				else{
-					setInterval(3000);
+					// Necesito hacer que se vean el suficiente tiempo las 2 cartas
 					cartas[cardId].flip();
 					cartas[i].flip();
 				}
@@ -100,10 +107,6 @@ MemoryGame = function(gs) {
 		}
 	}
 
-	this.loop = function(){
-		// Llama a la funcion draw
-		draw();
-	}
 	
 };
 
