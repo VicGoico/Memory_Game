@@ -22,7 +22,6 @@ MemoryGame = function(gs) {
 		"zeppelin"
 	];
 	var cartas = [];
-	//this.estadoJuego = "false";// Boolean que me dice si a acabado o no el juego
 	var contadorDeParejas = 8;
 	var comparar = false;
 	// gs -> es el servidor grafico
@@ -30,25 +29,19 @@ MemoryGame = function(gs) {
 	// Inicializo todos los valores de la matriz, con el dibujo
 	this.initGame = function(){
 		var contador = 1;
+		// Creo las cartas y las guardo en el array de Cartas
 		for(var i = 0; i < 16; i++){
-			//console.log(sprites[contador]);
 			cartas.push(new MemoryGameCard(sprites[contador]));
-
+			// Inicializo el contador, ya que he metido por lo menos
+			// una vez cada tipo de carta y tengo que meter su pareja
 			if(contador == 8){
 				contador = 0;
 			}
 			contador++;
 		}
-		// Aqui hago el aleatorio
-		var max = 0, min = 10;
+		// Aqui barajeoo
 		for(var i = 0; i < 50; i++){
 			var primeraCarta = Math.ceil((Math.random()*16));
-			/*if(max < primeraCarta){
-				max = primeraCarta;
-			}
-			if(min > primeraCarta){
-				min = primeraCarta;
-			}*/
 			var segundaCarta = Math.ceil((Math.random()*16));
 			primeraCarta--;
 			segundaCarta--;
