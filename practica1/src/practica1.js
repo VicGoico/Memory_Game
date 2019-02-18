@@ -39,20 +39,20 @@ MemoryGame = function(gs) {
 			}
 			contador++;
 		}
-		// Aqui barajeoo
+		// Aqui mezclo las cartas unas 50 veces
 		for(var i = 0; i < 50; i++){
-			var primeraCarta = Math.ceil((Math.random()*16));
-			var segundaCarta = Math.ceil((Math.random()*16));
-			primeraCarta--;
-			segundaCarta--;
+			// Me guardo 2 posiciones del array de cartas creadas aleatoriamente
+			// y le resto menos uno ya que se genera un numero entre 1 y 16
+			var primeraCarta = Math.ceil((Math.random()*16))--;
+			var segundaCarta = Math.ceil((Math.random()*16))--;
+			// Guardo los datos de la posicion de la primeraCarta
 			var card = cartas[primeraCarta];
+			// Mezclo los datos de las 2 cartas
 			cartas[primeraCarta] = cartas[segundaCarta];
 			cartas[segundaCarta] = card;
 		}
-		console.log(max);
-		console.log(min);
 		//Llamar a la funcion loop()
-		setInterval(this.loop, 10);
+		setInterval(this.loop, 16);
 	};
 	draw = function(){
 		// 1. Escribe el mensaje con el estado actual del juego
@@ -70,24 +70,28 @@ MemoryGame = function(gs) {
 
 	}
 	this.onClick = function(cardId){
-		cartas[cardId].flip();	
+		// Volteo la carta que me pasan por el cardId
+		cartas[cardId].flip();
+
 		var i = 0, encontrado = false;
+		// Compruebo si hay otra carta dada la vuelta tambien, para 
+		// poder hacer la compareción
 		while(i < cartas.length && !encontrado){
-			console.log("Se metio");
+			// Miro que su estado sea "Cara" y que no se la misma que la de cardId
 			if(cartas[i].estado == "Cara" && i != cardId){
 				encontrado = true;
+				// Compruebo si son la misma carta
 				if(cartas[cardId].compareTo(cartas[i])){
-					console.log(cartas[cardId].nombre);
-					console.log(cartas[i].nombre);
+					// Cambio su estado a "Encontada"
 					cartas[cardId].found();
 					cartas[i].found();
+					// Le resto a la varible menos uno, para saber luego si 
+					// el juego a terminado
 					contadorDeParejas--;
-					console.log(cartas[cardId].nombre);
-					console.log(cartas[i].nombre);
 				}
-				// No son la misma, cambio su estado a Espalda
+				// No son la misma, cambio su estado a "Espalda"
 				else{
-					//setInterval(3000);
+					setInterval(3000);
 					cartas[cardId].flip();
 					cartas[i].flip();
 				}
@@ -97,6 +101,7 @@ MemoryGame = function(gs) {
 	}
 
 	this.loop = function(){
+		// Llama a la funcion draw
 		draw();
 	}
 	
