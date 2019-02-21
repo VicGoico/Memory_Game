@@ -24,6 +24,8 @@ MemoryGame = function(gs) {
 	var cartas = [];
 	var contadorDeParejas = 8;
 	var comparar = false;
+	var dosCartas = false;
+	var cardId2;
 	// gs -> es el servidor grafico
 	
 	// Inicializo todos los valores de la matriz, con el dibujo
@@ -59,10 +61,10 @@ MemoryGame = function(gs) {
 	draw = function(){
 		// 1. Escribe el mensaje con el estado actual del juego
 		if(contadorDeParejas != 0){
-			gs.drawMessage("Jugando");
+			gs.drawMessage("Usted Esta Jugando");
 		}
 		else{
-			gs.drawMessage("Gano");
+			gs.drawMessage("Usted Ganó");
 		}
 		
 		// 2. Pide a cada una de las cartas del tablero que se dibujen
@@ -75,22 +77,17 @@ MemoryGame = function(gs) {
 	this.loop = function(){
 		// Llama a la funcion draw
 		draw();
-	}
-	this.onClick = function(cardId){
-		// Volteo la carta que me pasan por el cardId
-		cartas[cardId].flip();
-
 		var i = 0, encontrado = false;
 		// Compruebo si hay otra carta dada la vuelta tambien, para 
 		// poder hacer la compareción
 		while(i < cartas.length && !encontrado){
 			// Miro que su estado sea "Cara" y que no se la misma que la de cardId
-			if(cartas[i].estado == "Cara" && i != cardId){
+			if(cartas[i].estado == "Cara" && i != cardId2){
 				encontrado = true;
 				// Compruebo si son la misma carta
-				if(cartas[cardId].compareTo(cartas[i])){
+				if(cartas[cardId2].compareTo(cartas[i])){
 					// Cambio su estado a "Encontada"
-					cartas[cardId].found();
+					cartas[cardId2].found();
 					cartas[i].found();
 					// Le resto a la varible menos uno, para saber luego si 
 					// el juego a terminado
@@ -99,12 +96,27 @@ MemoryGame = function(gs) {
 				// No son la misma, cambio su estado a "Espalda"
 				else{
 					// Necesito hacer que se vean el suficiente tiempo las 2 cartas
-					cartas[cardId].flip();
+					cartas[cardId2].flip();
 					cartas[i].flip();
 				}
 			}
 			i++;
 		}
+
+	}
+	this.onClick = function(cardId){
+		// Volteo la carta que me pasan por el cardId
+		cartas[cardId].flip();
+		if(dosCartas){
+			//this.loop();
+			dosCartas = false;
+		}
+		else{
+			cardId2 = cardId;
+			dosCartas = true;
+
+		}
+		
 	}
 
 	
