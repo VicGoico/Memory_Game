@@ -71,43 +71,17 @@ MemoryGame = function(gs) {
 		for(var i = 0; i < cartas.length; i++){
 			cartas[i].draw(gs, i);
 		}
-
 	}
 
 	this.loop = function(){
 		// Llama a la funcion draw
 		draw();
-		var i = 0, encontrado = false;
-		// Compruebo si hay otra carta dada la vuelta tambien, para 
-		// poder hacer la compareción
-		while(i < cartas.length && !encontrado){
-			// Miro que su estado sea "Cara" y que no se la misma que la de cardId
-			if(cartas[i].estado == "Cara" && i != cardId2){
-				encontrado = true;
-				// Compruebo si son la misma carta
-				if(cartas[cardId2].compareTo(cartas[i])){
-					// Cambio su estado a "Encontada"
-					cartas[cardId2].found();
-					cartas[i].found();
-					// Le resto a la varible menos uno, para saber luego si 
-					// el juego a terminado
-					contadorDeParejas--;
-				}
-				// No son la misma, cambio su estado a "Espalda"
-				else{
-					// Necesito hacer que se vean el suficiente tiempo las 2 cartas
-					cartas[cardId2].flip();
-					cartas[i].flip();
-				}
-			}
-			i++;
-		}
-
+		
 	}
 	this.onClick = function(cardId){
 		// Volteo la carta que me pasan por el cardId
 		cartas[cardId].flip();
-		if(dosCartas){
+		/*if(dosCartas){
 			//this.loop();
 			dosCartas = false;
 		}
@@ -115,11 +89,37 @@ MemoryGame = function(gs) {
 			cardId2 = cardId;
 			dosCartas = true;
 
+		}*/
+		var i = 0, encontrado = false;
+		// Compruebo si hay otra carta dada la vuelta tambien, para 
+		// poder hacer la compareción
+		while(i < cartas.length && !encontrado){
+			// Miro que su estado sea "Cara" y que no se la misma que la de cardId
+			if(cartas[i].estado == "Cara" && i != cardId){
+				encontrado = true;
+				// Compruebo si son la misma carta
+				if(cartas[cardId].compareTo(cartas[i])){
+					// Cambio su estado a "Encontada"
+					cartas[cardId].found();
+					cartas[i].found();
+					// Le resto a la varible menos uno, para saber luego si 
+					// el juego a terminado
+					contadorDeParejas--;
+				}
+				// No son la misma, cambio su estado a "Espalda"
+				else{
+					setTimeout(
+					function({
+						// Necesito hacer que se vean el suficiente tiempo las 2 cartas
+						cartas[cardId].flip();
+						cartas[i].flip();
+					}),2000);
+					
+				}
+			}
+			i++;
 		}
-		
 	}
-
-	
 };
 
 
