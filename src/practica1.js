@@ -1,8 +1,4 @@
 /**
-Cosas que hacer, mirar que se vean las cartas 2
-Que se dan 2 click en la misma carta
-
-
  * MemoryGame es la clase que representa nuestro juego. Contiene un array con la cartas del juego,
  * el número de cartas encontradas (para saber cuándo hemos terminado el juego) y un texto con el mensaje
  * que indica en qué estado se encuentra el juego
@@ -29,6 +25,9 @@ MemoryGame = function (gs) {
 	var contadorDeParejas = 8;
 	var carta1 = null;
 	var carta2 = null;
+	var cartaID = -1;
+	var miniMensaje = "Principio";
+	var contadorDeClicks = 0;
 	// gs -> es el servidor grafico
 
 	// Inicializo todos los valores de la matriz, con el dibujo
@@ -64,10 +63,21 @@ MemoryGame = function (gs) {
 	draw = function () {
 		// 1. Escribe el mensaje con el estado actual del juego
 		if (contadorDeParejas != 0) {
-			gs.drawMessage("Usted Esta Jugando");
+			if(miniMensaje == "Principio"){
+				gs.drawMessage("Empezamos --- Clicks: " + contadorDeClicks);
+			}
+			else if(miniMensaje == "Correcto"){
+				gs.drawMessage("Correcto :) --- Clicks: " + contadorDeClicks);
+			}
+			else if(miniMensaje == "Fallo"){
+				gs.drawMessage("Fallo :( --- Clicks: " + contadorDeClicks);
+			}
+			else if(miniMensaje == "Misma carta"){
+				gs.drawMessage("Misma carta --- Clicks: " + contadorDeClicks);
+			}
 		}
 		else {
-			gs.drawMessage("Usted Ganó");
+			gs.drawMessage("Gano --- Clicks: " + contadorDeClicks);
 		}
 
 		// 2. Pide a cada una de las cartas del tablero que se dibujen
@@ -84,23 +94,26 @@ MemoryGame = function (gs) {
 
 	}
 	this.onClick = function (cardId) {
-
+		// Voy contando los clicks
+		contadorDeClicks++;
+		// Cambio de estado a la carta
 		cartas[cardId].flip();
+		// Compruebo que no sea null la primera carta a comparar
 		if (carta1 == null) {
 			carta1 = cartas[cardId];
+			cartaID = cardId;
 		}
+		// Si carta1 != null, entonces es que ya hay una carta seleccionada y cogemos la otra
 		else {
 			carta2 = cartas[cardId];
 		}
-		if (carta1 != null && carta2 != null) {
-			console.log("Else");
-			//console.log("LA carta gurada es esta" + carta.nombre);
+		// Si carta1 y carta2 estan cogidas y no son la misma carta en la misma posicion
+		if (carta1 != null && carta2 != null && cardId != cartaID) {
 			// Compruebo si son la misma carta
 			if (carta1.compareTo(carta2)) {
-				console.log("IF segundo")
+				miniMensaje = "Correcto";
 				// Cambio su estado a "Encontada"
 				carta1.found();
-				//cartas[carta].found();
 				carta2.found();
 				// Le resto a la varible menos uno, para saber luego si 
 				// el juego a terminado
@@ -110,7 +123,7 @@ MemoryGame = function (gs) {
 			}
 			// No son la misma, cambio su estado a "Espalda"
 			else {
-				console.log("ESLE 2");
+				miniMensaje = "Fallo";
 				setTimeout(() => {
 					carta1.flip();
 					carta2.flip();
@@ -120,8 +133,13 @@ MemoryGame = function (gs) {
 			}
 			
 		}
-		// Volteo la carta que me pasan por el cardId
-
+		// Si carta1 y carta2 estan cogidas y son la misma carta en la misma posicion
+		else if(cardId == cartaID && carta1 != null && carta2 != null){
+			// Podria poner un mensaje por el juego
+			miniMensaje = "Misma carta";
+			carta1 = null;
+			carta2 = null;
+		}
 	}
 };
 
